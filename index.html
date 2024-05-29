@@ -1,10 +1,133 @@
 <!DOCTYPE html>
 <html>
-<head>
+	<head>
 <meta charset = "utf-8">
-<title>Website</title>
-  </head>
-<body>
-<h1> Testing </h1>
-    </body>
+<title>A Neighbourhood Escapade</title>
+		<style>
+			button:hover {
+			border-color:rgb(214, 214, 214);
+			}
+			#option-1 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			max-width:250px;
+			left:10px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			#option-2 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			max-width:250px;
+			left:280px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			#option-3 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			max-width:250px;
+			left:550px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			#option-4 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			max-width:250px;
+			left:820px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			.option {
+			border:solid 5px black;
+			}
+			</style>
+	  </head>
+	<body>	
+		<button id = "option-1"></button>
+		<button id = "option-2"></button>
+		<button id = "option-3"></button>
+		<button id = "option-4"></button>
+		<script>
+			function optionContent(option1, option2, option3, option4) {
+			this.option1 = option1;
+			this.option2 = option2;
+			this.option3 = option3;
+			this.option4 = option4;
+			}; 
+			const branch1 = new optionContent("test1", "test2", "test3", "test4");
+			
+			var currentBranch = 1;
+			var optionPicked = "unselected";
+			/*Decides what each option will display*/
+			var selectOptionContent = function(option1, option2, option3, option4) {
+			var option1Content = document.getElementById("option-1");
+			var option2Content = document.getElementById("option-2");
+			var option3Content = document.getElementById("option-3");
+			var option4Content = document.getElementById("option-4");
+			option1Content.innerHTML = option1;
+			option1Content.innerHTML = option2;
+			option1Content.innerHTML = option3;
+			option1Content.innerHTML = option4;
+
+				};
+			
+			var branchTravelDecider = function(optionClicked) {
+			if (currentBranch === 1) {
+				if (optionClicked === 1) {
+				
+						} else if (optionClicked === 2) {
+						
+					 		} else if (optionClicked === 3) {
+								
+								} else if (optionClicked === 4) {
+								
+									}
+										} else if (currentBranch === 2) {
+											if (optionClicked === 1) {
+
+												} else if (optionClicked === 2) {
+
+														} else if (optionClicked === 3) {
+
+															} else if (optionClicked === 4) {
+
+																}
+																	};
+			};
+			
+			var option1Button = document.getElementById("option-1");
+        	var button1Clicked = function() {
+			branchTravelDecider(1);
+        	};
+        option1Button.addEventListener("click", button1Clicked);
+			
+		var option2Button = document.getElementById("option-2");
+        	var button2Clicked = function() {
+			branchTravelDecider(2);
+        	};
+        option2Button.addEventListener("click", button2Clicked);
+			
+		var option2Button = document.getElementById("option-2");
+        	var button2Clicked = function() {
+			branchTravelDecider(3);
+        	};
+        option2Button.addEventListener("click", button2Clicked);	
+			
+		var option2Button = document.getElementById("option-2");
+        	var button2Clicked = function() {
+			branchTravelDecider(4);
+        	};
+        option2Button.addEventListener("click", button2Clicked);
+		</script>
+    	</body>
   </html>
