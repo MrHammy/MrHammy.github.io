@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+	<head>
+<meta charset = "utf-8">
+<title>A Neighbourhood Escapade</title>
+		<style>
+			button:hover {
+			border-color:rgb(214, 214, 214);
+			}
+			#option-1 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			width:150px;
+			left:10px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			#option-2 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			width:150px;
+			left:280px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			#option-3 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			width:150px;
+			left:550px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			#option-4 {
+			position:absolute;
+			color:black;
+			background-color:white;
+			width:150px;
+			left:820px;
+			top:625px;
+			padding:5px;
+			margin:5px;
+			}
+			.option {
+			border:solid 5px black;
+			}
+			
+			#main-text {
+			font-size:2em;
+			font-family:monospace;
+			position:relative;
+			left:450px;
+			padding:5px;
+			margin:5px;
+			text-align:center;
+			max-width:450px;	
+			}
+			
+			#inventory-box {
+			position:absolute;
+			border:solid 3px black;
+			width:350px;
+			height:400px;
+			color:black;
+			left:1010px;
+			top:275px;
+			padding:0px;
+			margin:0px;
+			font-size:1em;
+			}
+			
+			#item-slot-0 {
+			position:absolute;
+			font-family:monospace;
+			color:black;
+			border:solid 4px black;
+			width:338px;
+			height:65px;
+			left:1015px;
+			top:265px;
+			text-align:center;
+			}
+			
+			#item-slot-1 {
+			position:absolute;
+			font-family:monospace;
+			color:black;
+			border:solid 4px black;
+			width:338px;
+			height:65px;
+			left:1015px;
+			top:345px;
+			text-align:center;
+			}
+			
+			#item-slot-2 {
+			position:absolute;
+			font-family:monospace;
+			color:black;
+			border:solid 4px black;
+			width:338px;
+			height:65px;
+			left:1015px;
+			top:425px;
+			text-align:center;
+			}
+			
+			#item-slot-3 {
+			position:absolute;
+			font-family:monospace;
+			color:black;
+			border:solid 4px black;
+			width:338px;
+			height:65px;
+			left:1015px;
+			top:505px;
+			text-align:center;
+			}
+			
+			#item-slot-4 {
+			position:absolute;
+			font-family:monospace;
+			color:black;
+			border:solid 4px black;
+			width:338px;
+			height:65px;
+			left:1015px;
+			top:585px;
+			text-align:center;
+			}
+			
+			</style>
+	  </head>
+	<body>
+  <audio id = "buzz">
+  <source src="https://static.wikia.nocookie.net/backrooms/images/a/a7/Level0LightAmbience.mp3" type="audio/mpeg">
+</audio>
+		<h2 id = "inventory-box"><span></span></h2>
+		<p id = "main-text"> You wake up.</p>
+		<button id = "option-1">Go to school?</button>
+		<button id = "option-2">Go to work?</button>
+		<button id = "option-3">Go to the store?</button>
+		<button id = "option-4">Explore the forest</button>
+		<button id = "debug-button">Debug</button>
+		<h3 id = "item-slot-0"> </h3>
+		<h3 id = "item-slot-1"> </h3>
+		<h3 id = "item-slot-2"> </h3>
+		<h3 id = "item-slot-3"> </h3>
+		<h3 id = "item-slot-4"> </h3>
+		<script>
+			/*buzz*/
+var buzz = document.getElementById("buzz");
+
+function playBuzz() {
+    buzz.play();
+};
+
+function pauseBuzz() {
+    buzz.pause();
+};
+			/*Just defining various variables*/
+			var currentBranch = "1";
+			var optionPicked = "unselected";		
+			var currentMainTextContent = null;
+			var delayedContent;
+			var optionsClickable = true;
+			
+			/*Defines and then draws the main text paragraph with it's appropriate content.*/
+			var decideMainTextContent = function(content) {
+			var textContent = document.getElementById("main-text");
+			textContent.innerHTML = content;
+			currentMainTextContent = content;};
+			
+			var waitToDecideMainTextContent = function() {
+			var textContent = document.getElementById("main-text");
+			textContent.innerHTML = delayedContent;
+			};
+			
+			/*Defines and then draws the options with their appropriate content.*/
+			var selectOptionContent = function(option1, option2, option3, option4) {
+			optionsClickable = true;
+			var option1Content = document.getElementById("option-1");
+			var option2Content = document.getElementById("option-2");
+			var option3Content = document.getElementById("option-3");
+			var option4Content = document.getElementById("option-4");
+			option1Content.innerHTML = option1;
+			option2Content.innerHTML = option2;
+			option3Content.innerHTML = option3;
+			option4Content.innerHTML = option4;
+			var option1Text = option1;
+			var option2Text = option2;
+			var option3Text = option3;
+			var option4Text = option4;
+			};
+			
+			/*The death screen that shows up when you, well, die.*/
+			var deathScreen = function(deathTease) {
+			decideMainTextContent("You died. " + deathTease);
+			};
+			
+			/*Displays options as blank, for when more main text is coming. Options cannot be clicked in this state.*/
+			var optionDisplayNull = function() {
+			var option1Content = document.getElementById("option-1");
+			var option2Content = document.getElementById("option-2");
+			var option3Content = document.getElementById("option-3");
+			var option4Content = document.getElementById("option-4");
+			option1Content.innerHTML = " ";
+			option2Content.innerHTML = " ";
+			option3Content.innerHTML = " ";
+			option4Content.innerHTML = " ";
+			optionsClickable = false;
+			};	
+			
+			/*Creates Requirments neccesary to select certain options, like needing 2 wood to fix a bridge. Options with unmet requirments will be a lighter color and will not respond when hovered over or clicked.*/
+			var createRequirements = function(option1, amount1, option2, amount2, option3, amount3, option4, amount4) {
+			if (option1 === null){option1Requirement = null; option1RequirementAmount = null;} else {option1Requirement = option1; option1RequirementAmount = amount1;};
+			if (option2 === null){option2Requirement = null; option2RequirementAmount = null;} else {option2Requirement = option2; option2RequirementAmount = amount2;};
+			if (option3 === null){option3Requirement = null; option3RequirementAmount = null;} else {option3Requirement = option3; option3RequirementAmount = amount3;};
+			if (option4 === null){option4Requirement = null; option4RequirementAmount = null;} else {option4Requirement = option4; option4RequirementAmount = amount4;};
+			};
+			/*The inventory system, needed to fulfil requirments and other miscellaneous functions*/
+			var returnToMainText = function() {
+			var textContent = document.getElementById("main-text");
+			textContent.innerHTML = currentMainTextContent;
+			};
+			
+			var itemSlot0 = document.getElementById("item-slot-0");
+			var itemSlot1 = document.getElementById("item-slot-1");
+			var itemSlot2 = document.getElementById("item-slot-2");
+			var itemSlot3 = document.getElementById("item-slot-3");
+			var itemSlot4 = document.getElementById("item-slot-4");
+			
+			var option1Requirement = null;
+			var option2Requirement = null;
+			var option3Requirement = null;
+			var option4Requirement = null;
+			var option1RequirementAmount = null;
+			var option2RequirementAmount = null;
+			var option3RequirementAmount = null;
+			var option4RequirementAmount = null;
+			var inventoryFull = false;
+			
+			const inventory = [" ", " ", " ", " ", " "];
+			
+			var inventoryFullMessage = function() {
+			var textContent = document.getElementById("main-text"); 
+			textContent.innerHTML = "Your Inventory is full.";
+			setTimeout(returnToMainText, 2500);
+			};
+			
+			var addToEmptySlot = function(item) {
+				if (inventory[0] = " ") {inventory[0] = item; itemSlot0.innerHTML = item;}
+				else if (inventory[1] = " ") {inventory[1] = item; itemSlot1.innerHTML = item;} 
+					else if (inventory[2] = " ") {inventory[2] = item; itemSlot2.innerHTML = item;}
+						else if (inventory[3] = " ") {inventory[3] = item; itemSlot3.innerHTML = item;}
+							else if (inventory[4] = " ") {inventory[4] = item; itemSlot4.innerHTML = item;}
+								else inventoryFull = true;
+															};
+			
+			/*Essential Function responsible for "sending" user to distinct branches of the story.*/
+			var branchTravelDecider = function(optionClicked) {
+			
+			if (currentBranch === "1") {
+				
+				if (optionClicked === 1) {
+				currentBranch = "1.1";
+					decideMainTextContent("Right. You're legally obligated to go to school. You're a child. You're running late. Grab one.");
+					selectOptionContent("School bag", "Block of wood", "Pocket knife", "School Key");
+				} else if (optionClicked === 2) {
+				currentBranch = "1.2";
+				decideMainTextContent("Right. You're a working adult required to work in order to earn a living wage. Remind me, where do you work?");
+				selectOptionContent("School", "Office", "Construction", "Retail");
+				} else if (optionClicked === 3) {
+				currentBranch = "1.3";
+				decideMainTextContent("Right. You live alone in a house in the suburbs you gained through your mother's inheritance. Dispite the time, you need milk, and <em><strong>CRAVE</strong></em> cereal.");
+				selectOptionContent("Go to the store", "Stay home and learn to live without cereal", "Use juice instead of milk", "Eat the cereal without anything");
+				} else if (optionClicked === 4) {
+				currentBranch = "1.4";
+				decideMainTextContent("Right. You live alone on the top floor of a large apartment complex. You're bored, and have the urge to explore the forest nearby, dispite the lack of light due to the time.");
+				selectOptionContent("Resist the urge and stay home", "Explore the forest", "", "");
+				}
+
+				}
+				else if (currentBranch === "1.1") {
+				if (optionClicked === 1) {
+				currentBranch = "1.1.1";
+				decideMainTextContent("Like a normal person, you grab your bag and head to school.");
+				optionDisplayNull();
+				delayedContent = "bomboclat";
+				setTimeout(() => {waitToDecideMainTextContent(); }, 2000);
+				} else if (optionClicked === 2) {
+				addToEmptySlot("Wood");	
+				if (inventoryFull === false) {
+				currentBranch = "1.1.2";
+				decideMainTextContent("You decide a block of wood is better than your school bag. Clearly it's a good thing you go to school. You arrive a little while later and enter first period.");
+				} else {inventoryFullMessage();};
+					
+				} else if (optionClicked === 3) {
+				
+				} else if (optionClicked === 4) {
+				
+				} 
+				} else if (currentBranch === "1.3") {
+				if (optionClicked === 1) {
+				currentBranch = "1.3.1";
+				decideMainTextContent("The craving is too strong. You go to the store. As it slips into view, you see that the store is closed.");
+				selectOptionContent("Try another store", "Go back home", "Check to see if the door is locked", "Cry on the floor for a few minutes");
+				} else if (optionClicked === 2) {
+				deathScreen("Your body craves things for a reason.");
+				} else if (optionClicked === 3) {
+				currentBranch = "1.3.3";
+				decideMainTextContent("You black out. You wake up in a courtroom.");
+				selectOptionContent('"Your Honour, what did I do?"', "Stay Silent", "", "");
+				} else if (optionClicked === 4) {
+				
+				};
+			};
+			};
+			
+			/*Allows the buttons to... actually do something.*/
+			
+			var option1Button = document.getElementById("option-1");
+        	var button1Clicked = function() {
+			if (optionsClickable === true) {
+			branchTravelDecider(1);
+        	}
+			};
+        option1Button.addEventListener("click", button1Clicked);
+			
+		var option2Button = document.getElementById("option-2");
+        	var button2Clicked = function() {
+			if (optionsClickable === true) {
+			branchTravelDecider(2);
+        	}
+        	};
+        option2Button.addEventListener("click", button2Clicked);
+			
+		var option3Button = document.getElementById("option-3");
+        	var button3Clicked = function() {
+			if (optionsClickable === true) {
+			branchTravelDecider(3);
+        	}
+        	};
+        option3Button.addEventListener("click", button3Clicked);	
+			
+		var option4Button = document.getElementById("option-4");
+        	var button4Clicked = function() {
+			if (optionsClickable === true) {
+			branchTravelDecider(4);
+        	}
+        	};
+        option4Button.addEventListener("click", button4Clicked);
+			
+		var debugButton = document.getElementById("debug-button");
+        	var debugButtonClicked = function() {
+			console.log(currentBranch);
+			console.log(inventory);
+			playBuzz();
+			};
+        debugButton.addEventListener("click", debugButtonClicked);
+				</script>
+
+		
+    	</body>
+  </html>
